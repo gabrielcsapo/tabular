@@ -1,6 +1,6 @@
 # Tabular
 
-![example](/assets/show.gif)
+![example](/assets/example.gif)
 
 ## What is this?
 
