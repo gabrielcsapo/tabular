@@ -5,7 +5,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"%d", [lblCount intValue]);
     [lblCount setIntValue:0];
 }
 

@@ -27,8 +27,9 @@
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
     NSTableCellView *cellView = [tableView makeViewWithIdentifier:@"cell" owner:self];
     [cellView setWantsLayer:YES];
-    [[cellView layer] setBorderWidth:1];
-    [[cellView layer] setBorderColor:CGColorGetConstantColor(kCGColorBlack)];
+    [[cellView layer] setBorderWidth:.5];
+    [[cellView layer] setBorderColor:CGColorCreateGenericRGB(204/255.0, 204/255.0, 204/255.0, 1)];
+    
     for(NSView *view in [cellView subviews]) {
         [view removeFromSuperview];
     }
@@ -40,6 +41,13 @@
         [cellView setFrameSize:NSMakeSize(150, 440)];
         return cellView;
     } else if ([tableColumn.identifier isEqualToString:@"Test1"]) {
+        SubView *subView = [self.storyboard instantiateControllerWithIdentifier:@"SubView"];
+        [views addObject:subView];
+        NSView *view = [subView view];
+        [cellView addSubview:view];
+        [cellView setFrameSize:NSMakeSize(150, 440)];
+        return cellView;
+    }  else if ([tableColumn.identifier isEqualToString:@"Test2"]) {
         SubView *subView = [self.storyboard instantiateControllerWithIdentifier:@"SubView"];
         [views addObject:subView];
         NSView *view = [subView view];
@@ -79,7 +87,13 @@
 }
 
 - (void) subtractView {
-    if(frames == 2) {
+    if(frames == 3) {
+        [views removeObjectAtIndex:2];
+        NSTableColumn *column = [self.tableView.tableColumns objectAtIndex:[self.tableView columnWithIdentifier:@"Test2"]];
+        [self.tableView removeTableColumn: column];
+        [self decreaseSize];
+        frames--;
+    } else if(frames == 2) {
         [views removeObjectAtIndex:1];
         NSTableColumn *column = [self.tableView.tableColumns objectAtIndex:[self.tableView columnWithIdentifier:@"Test1"]];
         [self.tableView removeTableColumn: column];
@@ -105,6 +119,13 @@
     } else if (frames == 1) {
         NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:@"Test1"];
         [[column headerCell] setStringValue:@"Test1"];
+        [column setWidth:150];
+        [self.tableView addTableColumn:column];
+        [self increaseSize];
+        frames++;
+    } else if (frames == 2) {
+        NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:@"Test2"];
+        [[column headerCell] setStringValue:@"Test2"];
         [column setWidth:150];
         [self.tableView addTableColumn:column];
         [self increaseSize];
